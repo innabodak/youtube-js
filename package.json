@@ -1,0 +1,11 @@
+{
+  "name": "youtube-on-js",
+  "version": "1.0.0",
+  "description": "Training YouTube priject on JavaScript",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Inna Bodak",
+  "license": "ISC"
+}
