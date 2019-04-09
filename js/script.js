@@ -91,6 +91,7 @@ more.addEventListener('click', () => {
     const videosWrapper = document.querySelector('.videos__wrapper');
     more.remove();
 
+    let delay = 10;
     for (let i = 0; i < data[0].length; i++) {
         let card = document.createElement('a');
         card.classList.add('videos__item', 'videos__item-active');
@@ -102,8 +103,78 @@ more.addEventListener('click', () => {
         `;
 
         videosWrapper.appendChild(card);
+        delay += 250;
         setTimeout(() => {
             card.classList.remove('videos__item-active');
-        }, 10);
+        }, delay);
+        bindModal(card);
+    }
+    sliceTitle('.videos__item-descr', 100);
+});
+
+function sliceTitle(selector, count) {
+    document.querySelectorAll(selector).forEach(item => {
+        item.textContent.trim();
+        if (item.textContent.length < count) {
+            return;
+        } else {
+            const str = item.textContent.slice(0, count + 1) + '...';
+            item.textContent = str;
+        }
+    });
+}
+sliceTitle('.videos__item-descr', 100);
+
+function openModal() {
+    modal.style.display = 'block';
+}
+
+function closeModal() {
+    modal.style.display = 'none';
+    player.stopVideo();
+}
+
+function bindModal(card) {
+    card.addEventListener('click', e => {
+        e.preventDefault();
+        const id = card.getAttribute('data-url');
+        loadVideo(id);
+        openModal();
+    });
+}
+
+videos.forEach(item => {
+    bindModal(item);
+});
+
+modal.addEventListener('click', e => {
+    if (!e.target.classList.contains('modal__body')) {
+        closeModal();
     }
 });
+
+document.addEventListener('keydown', e => {
+    if (modal.style.display === 'block' && e.key === 'Escape') {
+        closeModal();
+    }
+});
+
+function createVideoPlayer() {
+    var tag = document.createElement('script');
+
+    tag.src = 'https://www.youtube.com/iframe_api';
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    setTimeout(() => {
+        player = new YT.Player('frame', {
+            height: '100%',
+            width: '100%',
+            videoId: 'M7lc1UVf-VE',
+        });
+    }, 1000);
+}
+createVideoPlayer();
+
+function loadVideo(id) {
+    player.loadVideoById({ videoId: `${id}` });
+}
